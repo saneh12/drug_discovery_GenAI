@@ -6,16 +6,6 @@ from utils.molecule_generation import generate_molecules, optimize_molecule
 from utils.molecule_properties import predict_properties, predict_admet_properties
 from utils.molecule_visualization import display_molecule, display_molecule_grid, display_3d_molecule, display_molecule_comparison
 from utils.data_handling import search_pubchem, load_sample_molecules, get_dataset_stats, get_molecules_by_property
-import subprocess
-try:
-    import google.generativeai as genai
-except ModuleNotFoundError:
-    print("Installing google-generativeai...")
-    subprocess.run(["pip", "install", "google-generativeai"])
-    import google.generativeai as genai
-from google.generativeai.client import configure
-
-genai.configure(api_key=st.secrets["API_KEY"])
 
 st.set_page_config(
     page_title="MoleculeForge AI",
@@ -732,46 +722,6 @@ elif app_mode == "Search Compounds":
                     st.info("No compounds found matching your query.")
             except Exception as e:
                 st.error(f"Error during search: {str(e)}")
-
-default_prompt = """
-You are an AI assistant specializing in drug discovery and molecular interactions.
-You help researchers analyze chemical structures, predict drug interactions, and 
-suggest potential drug candidates based on molecular properties.
-
-Given the following question, respond with precise scientific details and explanations:
-{user_query}
-"""
-st.title("Ask the MoleculeForge Chatbot")
-st.write("Ask me anything about drug discovery, molecular interactions, and more!")
-
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
-def get_gemini_response(prompt):
-    try:
-        model = genai.GenerativeModel("gemini-2.0-flash") #type:ignore
-        response = model.generate_content(default_prompt.format(user_query=prompt))
-
-        return response.text if response else "Error: No response from the model."
-    except Exception as e:
-        return f"Error: {str(e)}"
-user_input = st.text_input("Type your message here...", key="user_input")
-if st.button("Send") and user_input:
-    response = get_gemini_response(user_input)
-    st.session_state.chat_history.append(("You", user_input))
-    st.session_state.chat_history.append(("Bot", response))
-
-if st.session_state.chat_history:
-    last_user, last_bot = st.session_state.chat_history[-2:]
-    st.markdown(f"**You:** {last_user[1]}")
-    st.markdown(f"**Bot:** {last_bot[1]}")
-with st.expander("Show Previous Chats"):
-    for role, text in st.session_state.chat_history[:-2]:  # Exclude latest message
-        if role == "You":
-            st.markdown(f"**You:** {text}")
-        else:
-            st.markdown(f"**Bot:** {text}")
-
 
 #footer
 st.markdown("""
