@@ -6,7 +6,13 @@ from utils.molecule_generation import generate_molecules, optimize_molecule
 from utils.molecule_properties import predict_properties, predict_admet_properties
 from utils.molecule_visualization import display_molecule, display_molecule_grid, display_3d_molecule, display_molecule_comparison
 from utils.data_handling import search_pubchem, load_sample_molecules, get_dataset_stats, get_molecules_by_property
-import google.generativeai as genai
+
+try:
+    import google.generativeai as genai
+except ModuleNotFoundError:
+    print("Installing google-generativeai...")
+    subprocess.run(["pip", "install", "google-generativeai"])
+    import google.generativeai as genai
 from google.generativeai.client import configure
 
 genai.configure(api_key=st.secrets["API_KEY"])
