@@ -8,8 +8,8 @@ from utils.molecule_visualization import display_molecule, display_molecule_grid
 from utils.data_handling import search_pubchem, load_sample_molecules, get_dataset_stats, get_molecules_by_property
 import google.generativeai as genai
 from google.generativeai.client import configure
-API_KEY = "AIzaSyDlqkqi99At-x9zB0hSo6mn-sO2VkCHfMc"
-genai.configure(api_key=API_KEY) # type: ignore
+
+genai.configure(api_key=st.secrets["API_KEY"])
 
 st.set_page_config(
     page_title="MoleculeForge AI",
