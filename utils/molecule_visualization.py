@@ -10,7 +10,6 @@ import py3Dmol
 import json
 
 def mol_to_svg(mol, molSize=(300, 300), kekulize=True, drawer=None, **kwargs):
-    """Convert an RDKit molecule to SVG"""
     if mol is None:
         return None
     
@@ -54,7 +53,6 @@ def display_molecule(smiles, size=(300, 300), legend=""):
         st.error(f"Error displaying molecule: {str(e)}")
 
 def display_molecule_grid(smiles_list, cols=3, size=(200, 200), labels=None):
-    """Display a grid of molecules in Streamlit"""
     if not smiles_list:
         st.warning("No molecules to display.")
         return
@@ -94,7 +92,8 @@ def display_molecule_grid(smiles_list, cols=3, size=(200, 200), labels=None):
                 with cols_for_row[col]:
                     svg = mol_to_svg(mols[idx], molSize=size)
                     st.image(svg) # type: ignore
-                    st.caption(legends[idx])
+                    st.caption(f"{legends[idx]}\nSMILES: {smiles_list[idx]}")
+
 
 def display_3d_molecule(smiles, width=500, height=400, style="stick"):
     mol = Chem.MolFromSmiles(smiles)
